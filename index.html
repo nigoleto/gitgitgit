@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZENONIA BOSS</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url("https://wzcommunity-fn.qpyou.cn/wzcommunity/community_zenonia/test/20240808_130050_12jCsVMwey.png");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-color: rgb(255, 255, 255); /* 0.5는 50% 투명도 */
+            background-blend-mode: overlay;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h1><strong>ZENONIA</strong></h1>
+        <p>현재 시각: <span id="currentTime"></span></p>
+        <br>
+        <h2 id="bossName"></h2>
+        <p>출현시간</p>
+        <div id="bossTimes"></div>
+        <br>
+    </div>
+
+    <div class="card p-4 shadow-sm">
+        <form id="bossForm">
+            <div class="mb-3">
+                <label for="2" class="form-label">무팔메토 (66%)</label>
+                <input type="radio" id="2" name="name" value="무팔메토" class="form-check-input" required>
+            </div>
+            <div class="mb-3">
+                <label for="1" class="form-label">테미르 (50%)</label>
+                <input type="radio" id="1" name="name" value="테미르" class="form-check-input" required>
+            </div>
+            <div class="mb-3">
+                <label for="3" class="form-label">리자몽킹 (33%)</label>
+                <input type="radio" id="3" name="name" value="리자몽킹" class="form-check-input" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="time" class="form-label">처치시간</label>
+                <input type="time" id="time" name="time" class="form-control" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">계산</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function updateTime() {
+        const currentTimeElement = document.getElementById('currentTime');
+        const now = new Date();
+        const formattedTime = now.toLocaleTimeString();
+        currentTimeElement.textContent = formattedTime;
+    }
+
+    setInterval(updateTime, 1000); // 1초마다 updateTime 함수를 호출하여 시각 업데이트
+    updateTime(); // 페이지 로드 시 즉시 현재 시각 표시
+
+    document.getElementById('bossForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // 폼 제출 방지
+
+        const name = document.querySelector('input[name="name"]:checked').value;
+        const time = document.getElementById('time').value;
+        const bossNameElement = document.getElementById('bossName');
+        const bossTimesElement = document.getElementById('bossTimes');
+
+        let bossTime = new Date('1970-01-01T' + time + ':00');
+        let bossTimes = [];
+
+        if (name === "테미르") {
+            for (let i = 0; i < 5; i++) {
+                bossTime.setHours(bossTime.getHours() + 6);
+                bossTimes.push(bossTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}));
+            }
+        } else if (name === "무팔메토") {
+            for (let i = 0; i < 5; i++) {
+                bossTime.setHours(bossTime.getHours() + 9);
+                bossTimes.push(bossTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}));
+            }
+        } else if (name === "리자몽킹") {
+            for (let i = 0; i < 5; i++) {
+                bossTime.setHours(bossTime.getHours() + 4);
+                bossTime.setMinutes(bossTime.getMinutes() + 30);
+                bossTimes.push(bossTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}));
+            }
+        }
+
+        bossNameElement.textContent = name;
+        bossTimesElement.innerHTML = '';
+        bossTimes.forEach(function(time) {
+            const timeElement = document.createElement('p');
+            timeElement.textContent = time;
+            timeElement.style.fontSize = '20px';
+            bossTimesElement.appendChild(timeElement);
+        });
+    });
+</script>
+
+<!-- Bootstrap JS and dependencies (optional for JavaScript features like tooltips, popovers, etc.) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
